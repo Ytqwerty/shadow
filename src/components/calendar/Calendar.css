@@ -2,3 +2,18 @@
     margin-left: 25px;
     margin-top: 25px;
 }
+
+.year {
+    color:black;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.button {
+    margin-bottom: 10px;
+}
+.currentDay {
+    color:crimson
+}
+.day {
+    cursor:pointer
+}
