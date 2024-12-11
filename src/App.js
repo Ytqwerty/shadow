@@ -1,25 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import Calendar from "./components/calendar/Calendar";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+    // let weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    // let month = ['January', 'February', 'March', 'April', 'May', 'June',
+    //     'July', 'August', 'September', 'October', 'November', 'December'];
+    // let currentDay = new Date();
+    return (
+        <div className="App" >
+            <Calendar/>
+        </div>
+    );
 }
 
 export default App;
