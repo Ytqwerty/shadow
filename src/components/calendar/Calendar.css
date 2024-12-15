@@ -4,9 +4,11 @@
     background-color: #f9f9f9;
     padding: 25px;
     font-size: 18px;
+    display: flex;
 }
-
-
+.right {
+    margin-left: 20px;
+}
 .year {
     color: #333;
     font-weight: 600;

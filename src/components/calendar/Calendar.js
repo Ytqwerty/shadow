@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './Calendar.css'
 import Modal from "../ui/modal/Modal";
+import Event from "../event/Event";
 
 const Calendar = () => {
     const DaysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -13,6 +14,8 @@ const Calendar = () => {
     const currentDay = currentDate.getDate()
     const [modal, setModal] = useState(false);
     const [selectedDay, setSelectedDay] = useState(null);
+    const [information, setInformation] = useState([])
+
     function getDaysInMonth(year, month) {
         return new Date(year, month + 1, 0).getDate();
     }
@@ -22,6 +25,7 @@ const Calendar = () => {
     function getFirstDayOfMonth(year, month) {
         return new Date(year, month, 1).getDay();
     }
+
     const FirstDay = getFirstDayOfMonth(currentYear, currentMonth);
 
     const firstDay = FirstDay === 0 ? 6 : FirstDay - 1;
@@ -47,35 +51,42 @@ const Calendar = () => {
         setSelectedDay(day);
         setModal(true);
     }
+
     return (
         <div className="calendar">
-            <Modal open={modal} setOpen={setModal} selectedDay={selectedDay} currentMonth={month[currentMonth]}/>
-            <div className='year'> {month[currentMonth]} {currentYear}</div>
-            <div className='button'>
-                <button onClick={() => changeMonth(-1)}>Назад</button>
-                <button onClick={() => changeMonth(1)}>Вперед</button>
+            <div className='left'>
+                <Modal open={modal} setOpen={setModal} selectedDay={selectedDay} currentMonth={month[currentMonth]}
+                       information={information} setInformation={setInformation}/>
+                <div className='year'> {month[currentMonth]} {currentYear}</div>
+                <div className='button'>
+                    <button onClick={() => changeMonth(-1)}>Назад</button>
+                    <button onClick={() => changeMonth(1)}>Вперед</button>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        {DaysOfWeek.map((day, index) => (
+                            <td key={index}>{day}</td>
+                        ))}
+                    </tr>
+                    {rows.map(function (day, index) {
+                        return (
+                            <tr key={index} className='day'>
+                                {day.map(function (item, index2) {
+                                    return (
+                                        <td key={index2} className={item === currentDay ? 'currentDay' : ''}
+                                            onClick={() => handleClick(item)}>{item}</td>
+                                    )
+                                })}
+                            </tr>
+                        )
+                    })}
+                    </thead>
+                </table>
             </div>
-            <table>
-                <thead>
-                <tr>
-                    {DaysOfWeek.map((day, index) => (
-                        <td key={index}>{day}</td>
-                    ))}
-                </tr>
-                {rows.map(function (day, index) {
-                    return (
-                        <tr key={index} className='day'>
-                            {day.map(function (item, index2) {
-                                return (
-                                    <td key={index2} className={item===currentDay ? 'currentDay' : ''}
-                                        onClick={() => handleClick(item)}>{item}</td>
-                                )
-                            })}
-                        </tr>
-                    )
-                })}
-                </thead>
-            </table>
+            <div className='right'>
+                <Event information={information} month={month[currentMonth]}/>
+            </div>
         </div>
     );
 };

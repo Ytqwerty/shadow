@@ -1,0 +1,7 @@
+.event_content {
+    display: flex;
+    justify-content: space-between;
+}
+.event_day,.event_month {
+    margin-right: 5px;
+}
