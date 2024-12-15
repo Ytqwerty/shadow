@@ -1,19 +1,40 @@
 .calendar {
     margin-left: 25px;
     margin-top: 25px;
+    background-color: #f9f9f9;
+    padding: 25px;
+    font-size: 18px;
 }
 
+
 .year {
-    color:black;
+    color: #333;
     font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 25px;
+    margin-bottom: 20px;
 }
+
 .button {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
+.calendar button {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
 .currentDay {
-    color:crimson
+    color: crimson;
+    font-weight: 600;
+    border-radius: 50%;
+    padding: 5px;
 }
+
 .day {
-    cursor:pointer
+    cursor: pointer
 }

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import './Calendar.css'
 import Modal from "../ui/modal/Modal";
-import Button from "../ui/button/Button";
 
 const Calendar = () => {
     const DaysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -12,7 +11,8 @@ const Calendar = () => {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
     const currentDay = currentDate.getDate()
-
+    const [modal, setModal] = useState(false);
+    const [selectedDay, setSelectedDay] = useState(null);
     function getDaysInMonth(year, month) {
         return new Date(year, month + 1, 0).getDate();
     }
@@ -42,14 +42,14 @@ const Calendar = () => {
         const newDate = new Date(currentYear, currentMonth + month, 1);
         setCurrentDate(newDate);
     }
-    const [modal, setModal] = useState(false);
 
-    function handleClick() {
-        setModal(!modal)
+    function handleClick(day) {
+        setSelectedDay(day);
+        setModal(true);
     }
     return (
         <div className="calendar">
-            <Modal open={modal} setOpen={setModal}/>
+            <Modal open={modal} setOpen={setModal} selectedDay={selectedDay} currentMonth={month[currentMonth]}/>
             <div className='year'> {month[currentMonth]} {currentYear}</div>
             <div className='button'>
                 <button onClick={() => changeMonth(-1)}>Назад</button>
@@ -67,7 +67,8 @@ const Calendar = () => {
                         <tr key={index} className='day'>
                             {day.map(function (item, index2) {
                                 return (
-                                    <td key={index2} className={item===currentDay ? 'currentDay' : ''} onClick={handleClick}>{item}</td>
+                                    <td key={index2} className={item===currentDay ? 'currentDay' : ''}
+                                        onClick={() => handleClick(item)}>{item}</td>
                                 )
                             })}
                         </tr>
