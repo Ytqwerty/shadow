@@ -2,17 +2,19 @@ import './Modal.css'
 import {useState} from "react";
 
 const Modal = (props) => {
-    const[inputValue,setInputValue] = useState('')
+    const [inputValue, setInputValue] = useState('')
+
     function OnChange_information(event) {
-            setInputValue(event.target.value)
+        setInputValue(event.target.value)
     }
-    function addEvent () {
-        props.setInformation(function(prev) {
+
+    function addEvent() {
+        props.setInformation(function (prev) {
             let newState = [...prev];
             let obj = {
-                day:props.selectedDay,
-                month:props.currentMonth,
-                text:inputValue
+                day: props.selectedDay,
+                month: props.currentMonth,
+                text: inputValue
             }
             newState.push(obj)
             return newState
@@ -20,6 +22,7 @@ const Modal = (props) => {
         props.setOpen(false)
         setInputValue('')
     }
+
     return (
         <div className={props.open ? 'active_modal' : 'modal'} onClick={() => props.setOpen(false)}>
             <div className='modal_content' onClick={function (event) {

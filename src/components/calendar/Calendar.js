@@ -15,6 +15,7 @@ const Calendar = () => {
     const [modal, setModal] = useState(false);
     const [selectedDay, setSelectedDay] = useState(null);
     const [information, setInformation] = useState([])
+    const today = new Date();
 
     function getDaysInMonth(year, month) {
         return new Date(year, month + 1, 0).getDate();
@@ -48,9 +49,14 @@ const Calendar = () => {
     }
 
     function handleClick(day) {
+        const selectedDate = new Date(currentYear, currentMonth, day);
+        if (selectedDate <= today) {
+            return;
+        }
         setSelectedDay(day);
         setModal(true);
     }
+
 
     return (
         <div className="calendar">
@@ -74,7 +80,10 @@ const Calendar = () => {
                             <tr key={index} className='day'>
                                 {day.map(function (item, index2) {
                                     return (
-                                        <td key={index2} className={item === currentDay ? 'currentDay' : ''}
+                                        <td key={index2}
+                                            className={item === today.getDate()
+                                            && currentMonth === today.getMonth()
+                                            && currentYear === today.getFullYear() ? 'currentDay' : ''}
                                             onClick={() => handleClick(item)}>{item}</td>
                                     )
                                 })}

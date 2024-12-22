@@ -6,7 +6,7 @@ const Event = (props) => {
 
     return (
         <div className='event'>
-            <div>{ props.information.map(function (item, index) {
+            <div>{props.information.map(function (item, index) {
                 return (
                     <div key={index} className='event_content'>
                         <div className='event_day'>{item.day}</div>
