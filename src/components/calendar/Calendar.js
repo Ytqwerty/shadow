@@ -4,9 +4,9 @@ import Modal from "../ui/modal/Modal";
 import Event from "../event/Event";
 
 const Calendar = () => {
+
     const DaysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     const [currentDate, setCurrentDate] = useState(new Date());
-
     const month = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'];
     const currentYear = currentDate.getFullYear();
@@ -47,17 +47,20 @@ const Calendar = () => {
         const newDate = new Date(currentYear, currentMonth + month, 1);
         setCurrentDate(newDate);
     }
-
     function handleClick(day) {
         const selectedDate = new Date(currentYear, currentMonth, day);
         if (selectedDate <= today) {
-            return;
+            return
         }
         setSelectedDay(day);
         setModal(true);
     }
-
-
+    let arrayDays = []
+    for(let i = 0;i<information.length;i++) {
+    if (information) {
+        arrayDays.push(information[i].day)
+    }
+    }
     return (
         <div className="calendar">
             <div className='left'>
@@ -83,7 +86,7 @@ const Calendar = () => {
                                         <td key={index2}
                                             className={item === today.getDate()
                                             && currentMonth === today.getMonth()
-                                            && currentYear === today.getFullYear() ? 'currentDay' : ''}
+                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) ?'selectedDay' : '' }
                                             onClick={() => handleClick(item)}>{item}</td>
                                     )
                                 })}
