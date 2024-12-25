@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import './Calendar.css'
+import React, {useState, useEffect} from 'react';
+import './Calendar.css';
 import Modal from "../ui/modal/Modal";
 import Event from "../event/Event";
 
@@ -38,15 +38,20 @@ const Calendar = () => {
         days.push(i);
     }
 
-    const rows = [];
-    for (let i = 0; i < days.length; i += 7) {
-        rows.push(days.slice(i, i + 7))
-    }
+    const [rows, setRows] = useState([]);
+    useEffect(() => {
+        const newRows = [];
+        for (let i = 0; i < days.length; i += 7) {
+            newRows.push(days.slice(i, i + 7));
+        }
+        setRows(newRows);
+    }, [currentDate]);
 
     function changeMonth(month) {
         const newDate = new Date(currentYear, currentMonth + month, 1);
         setCurrentDate(newDate);
     }
+
     function handleClick(day) {
         const selectedDate = new Date(currentYear, currentMonth, day);
         if (selectedDate <= today) {
@@ -55,12 +60,48 @@ const Calendar = () => {
         setSelectedDay(day);
         setModal(true);
     }
-    let arrayDays = []
-    for(let i = 0;i<information.length;i++) {
-    if (information) {
-        arrayDays.push(information[i].day)
+
+    let arrayDays = information.map(item => item.day);
+
+    const [currentNumber, setCurrentNumber] = useState(null);
+
+    function dragStartHandler(e, item) {
+        setCurrentNumber(item);
     }
+
+    function dragEndHandler(e) {
+        e.target.style.background = 'white';
     }
+
+    function dragOverHandler(e) {
+        e.preventDefault();
+        e.target.style.background = 'lightgray';
+    }
+
+    function dropHandler(e, item) {
+        e.preventDefault();
+        let currentNum = ''
+        let firstIndex = null;
+        let secondIndex = null;
+        const newRows = [...rows]
+        for (let i = 0; i < newRows.length; i++) {
+            for (let j = 0; j < newRows[i].length; j++) {
+                if (newRows[i][j] === currentNumber) {
+                    firstIndex = { i: i, j: j };
+                }
+                if (newRows[i][j] === item) {
+                    secondIndex = {i: i, j: j };
+                }
+            }
+        }
+        if (firstIndex && secondIndex) {
+            currentNum = newRows[firstIndex.i][firstIndex.j];
+            newRows[firstIndex.i][firstIndex.j] = newRows[secondIndex.i][secondIndex.j];
+            newRows[secondIndex.i][secondIndex.j] = currentNum;
+        }
+        setRows(newRows);
+    }
+
     return (
         <div className="calendar">
             <div className='left'>
@@ -84,9 +125,14 @@ const Calendar = () => {
                                 {day.map(function (item, index2) {
                                     return (
                                         <td key={index2}
+                                            draggable={true}
+                                            onDragStart={(e) => dragStartHandler(e, item)}
+                                            onDragEnd={(e) => dragEndHandler(e)}
+                                            onDragOver={(e) => dragOverHandler(e)}
+                                            onDrop={(e) => dropHandler(e, item)}
                                             className={item === today.getDate()
                                             && currentMonth === today.getMonth()
-                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) ?'selectedDay' : '' }
+                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) ? 'selectedDay' : ''}
                                             onClick={() => handleClick(item)}>{item}</td>
                                     )
                                 })}
