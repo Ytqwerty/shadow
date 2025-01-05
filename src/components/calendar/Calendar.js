@@ -37,7 +37,6 @@ const Calendar = () => {
     for (let i = 1; i <= daysInMonth; i++) {
         days.push(i);
     }
-
     const [rows, setRows] = useState([]);
     useEffect(() => {
         const newRows = [];
@@ -50,6 +49,7 @@ const Calendar = () => {
     function changeMonth(month) {
         const newDate = new Date(currentYear, currentMonth + month, 1);
         setCurrentDate(newDate);
+        setSelectedDay(null)
     }
 
     function handleClick(day) {
@@ -75,31 +75,25 @@ const Calendar = () => {
 
     function dragOverHandler(e) {
         e.preventDefault();
-        e.target.style.background = 'lightgray';
     }
 
     function dropHandler(e, item) {
         e.preventDefault();
-        let currentNum = ''
-        let firstIndex = null;
-        let secondIndex = null;
-        const newRows = [...rows]
-        for (let i = 0; i < newRows.length; i++) {
-            for (let j = 0; j < newRows[i].length; j++) {
-                if (newRows[i][j] === currentNumber) {
-                    firstIndex = { i: i, j: j };
-                }
-                if (newRows[i][j] === item) {
-                    secondIndex = {i: i, j: j };
-                }
+        const selectedDate = new Date(currentYear, currentMonth,item);
+        if ( selectedDate< today) {
+            return;
+        }
+        if (currentNumber === item) {
+            return;
+        }
+        const updatedInformation = [...information];
+        for (let i = 0; i < updatedInformation.length; i++) {
+            if (updatedInformation[i].day === currentNumber) {
+                updatedInformation[i].day = item;
             }
         }
-        if (firstIndex && secondIndex) {
-            currentNum = newRows[firstIndex.i][firstIndex.j];
-            newRows[firstIndex.i][firstIndex.j] = newRows[secondIndex.i][secondIndex.j];
-            newRows[secondIndex.i][secondIndex.j] = currentNum;
-        }
-        setRows(newRows);
+        setInformation(updatedInformation);
+        e.target.style.background = 'white';
     }
 
     return (
@@ -132,7 +126,7 @@ const Calendar = () => {
                                             onDrop={(e) => dropHandler(e, item)}
                                             className={item === today.getDate()
                                             && currentMonth === today.getMonth()
-                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) ? 'selectedDay' : ''}
+                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) &&  currentMonth === today.getMonth() ? 'selectedDay' : ''}
                                             onClick={() => handleClick(item)}>{item}</td>
                                     )
                                 })}
