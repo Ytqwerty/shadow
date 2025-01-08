@@ -49,7 +49,8 @@ const Calendar = () => {
     function changeMonth(month) {
         const newDate = new Date(currentYear, currentMonth + month, 1);
         setCurrentDate(newDate);
-        setSelectedDay(null)
+        setSelectedDay(null);
+        setRows([]);
     }
 
     function handleClick(day) {
@@ -62,6 +63,7 @@ const Calendar = () => {
     }
 
     let arrayDays = information.map(item => item.day);
+    console.log(arrayDays);
 
     const [currentNumber, setCurrentNumber] = useState(null);
 
@@ -72,15 +74,27 @@ const Calendar = () => {
     function dragEndHandler(e) {
         e.target.style.background = 'white';
     }
+    const [hoverTimeout, setHoverTimeout] = useState(null);
 
-    function dragOverHandler(e) {
-        e.preventDefault();
+    function dragOverHandler() {
+        if (!hoverTimeout && arrayDays.includes(currentNumber)) {
+            setHoverTimeout(setTimeout(() => {
+                changeMonth(1);
+            }, 1000));
+        }
     }
+    function dragLeaveHandler() {
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+        }
+    }
+    console.log(information)
 
     function dropHandler(e, item) {
         e.preventDefault();
-        const selectedDate = new Date(currentYear, currentMonth,item);
-        if ( selectedDate< today) {
+        const selectedDate = new Date(currentYear, currentMonth, item);
+        if (selectedDate < today) {
             return;
         }
         if (currentNumber === item) {
@@ -90,12 +104,15 @@ const Calendar = () => {
         for (let i = 0; i < updatedInformation.length; i++) {
             if (updatedInformation[i].day === currentNumber) {
                 updatedInformation[i].day = item;
+                updatedInformation[i].month = month[currentMonth];  // Обновляем месяц
+                updatedInformation[i].year = currentYear
+
             }
         }
         setInformation(updatedInformation);
         e.target.style.background = 'white';
     }
-
+    console.log(information)
     return (
         <div className="calendar">
             <div className='left'>
@@ -104,7 +121,10 @@ const Calendar = () => {
                 <div className='year'> {month[currentMonth]} {currentYear}</div>
                 <div className='button'>
                     <button onClick={() => changeMonth(-1)}>Назад</button>
-                    <button onClick={() => changeMonth(1)}>Вперед</button>
+                    <button onClick={() => changeMonth(1)}
+                            onDragOver={dragOverHandler}
+                            onDragLeave={dragLeaveHandler}>Вперед
+                    </button>
                 </div>
                 <table>
                     <thead>
@@ -122,11 +142,12 @@ const Calendar = () => {
                                             draggable={true}
                                             onDragStart={(e) => dragStartHandler(e, item)}
                                             onDragEnd={(e) => dragEndHandler(e)}
-                                            onDragOver={(e) => dragOverHandler(e)}
+                                            onDragOver={(e) => e.preventDefault()}
                                             onDrop={(e) => dropHandler(e, item)}
                                             className={item === today.getDate()
                                             && currentMonth === today.getMonth()
-                                            && currentYear === today.getFullYear() ? 'currentDay' : arrayDays.includes(item) &&  currentMonth === today.getMonth() ? 'selectedDay' : ''}
+                                            && currentYear === today.getFullYear() ? 'currentDay' :
+                                                information.some(info => info.day === item && info.month === month[currentMonth]) ? 'selectedDay' : ''}
                                             onClick={() => handleClick(item)}>{item}</td>
                                     )
                                 })}
